@@ -1,0 +1,5 @@
+a="Ram"
+b="Singh"
+c="Bhavani"
+d=a+b+c
+print(a,"+",b,"+",c,"=",d)
