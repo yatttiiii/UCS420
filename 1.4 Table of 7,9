@@ -1,0 +1,8 @@
+#Table of 7
+print("Table of 7:")
+for i in range (1,11):
+    print("7 *",i,"=",7*i)
+#Table of 9
+print("Table of 9:")
+for i in range (1,11):
+    print("9 *",i,"=",9*i)
