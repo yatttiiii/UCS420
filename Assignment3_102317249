@@ -1,0 +1,84 @@
+import pandas as pd
+
+# Q1: Create initial DataFrame
+data = {
+    'Name': ['John', 'Emily', 'Michael', 'Sarah', 'David', 'Anna', 'James', 'Laura', 'Robert'],
+    'Age': [25, 30, 22, 28, 35, 27, 40, 23, 31],
+    'Department': ['HR', 'IT', 'IT', 'Marketing', 'Finance', 'IT', 'Finance', 'Marketing', 'HR'],
+    'Salary': [45000, 55000, 48000, 51000, 60000, 58000, 62000, 47000, 52000]
+}
+df = pd.DataFrame(data)
+
+# Q2: Locate specific rows
+print("Q2: Selected Rows 0, 4, 7, 8\n", df.loc[[0, 4, 7, 8]], "\n")
+
+# Q3:
+print("Q3-i: Rows 3 to 7\n", df.iloc[3:8], "\n")
+print("Q3-ii: Rows 4 to 8, Columns 2 to 4\n", df.iloc[4:9, 2:4], "\n")
+print("Q3-iii: All Rows, Columns 1 to 3\n", df.iloc[:, 1:4], "\n")
+
+# Q6: New Employee DataFrame
+emp_data = {
+    'Employee_ID': [101, 102, 103, 104, 105],
+    'Name': ['Alice', 'Bob', 'Charlie', 'Diana', 'Edward'],
+    'Department': ['HR', 'IT', 'IT', 'Marketing', 'Sales'],
+    'Age': [29, 34, 41, 28, 38],
+    'Salary': [50000, 70000, 65000, 55000, 60000],
+    'Years_of_Experience': [4, 8, 10, 3, 12],
+    'Joining_Date': ['2020-03-15', '2017-07-19', '2013-06-01', '2021-02-10', '2010-11-25'],
+    'Gender': ['Female', 'Male', 'Male', 'Female', 'Male'],
+    'Bonus': [5000, 7000, 6000, 4500, 5000],
+    'Rating': [4.5, 4.0, 3.8, 4.7, 3.5]
+}
+emp_df = pd.DataFrame(emp_data)
+
+# a) Shape
+print("Q6-a: Shape:", emp_df.shape, "\n")
+
+# b) Info
+print("Q6-b: Info")
+emp_df.info()
+print()
+
+# c) Describe
+print("Q6-c: Describe\n", emp_df.describe(), "\n")
+
+# d) First 5 and last 3 rows
+print("Q6-d: First 5 Rows\n", emp_df.head(), "\n")
+print("Q6-d: Last 3 Rows\n", emp_df.tail(3), "\n")
+
+# e) Stats
+print("Q6-e: Average Salary =", emp_df['Salary'].mean())
+print("Q6-e: Total Bonus =", emp_df['Bonus'].sum())
+print("Q6-e: Youngest Age =", emp_df['Age'].min())
+print("Q6-e: Highest Rating =", emp_df['Rating'].max(), "\n")
+
+# f) Sort by Salary descending
+print("Q6-f: Sorted by Salary\n", emp_df.sort_values(by='Salary', ascending=False), "\n")
+
+# g) Add Performance_Category column
+def performance(r):
+    if r >= 4.5: return "Excellent"
+    elif r >= 4.0: return "Good"
+    else: return "Average"
+emp_df['Performance_Category'] = emp_df['Rating'].apply(performance)
+print("Q6-g: With Performance Category\n", emp_df[['Name', 'Rating', 'Performance_Category']], "\n")
+
+# h) Missing values
+print("Q6-h: Missing values\n", emp_df.isnull().sum(), "\n")
+
+# i) Rename column
+emp_df.rename(columns={'Employee_ID': 'ID'}, inplace=True)
+print("Q6-i: Renamed Employee_ID to ID\n", emp_df.columns, "\n")
+
+# j) Filters
+print("Q6-j: Employees with > 5 years exp\n", emp_df[emp_df['Years_of_Experience'] > 5], "\n")
+print("Q6-j: Employees in IT\n", emp_df[emp_df['Department'] == 'IT'], "\n")
+
+# k) Add Tax column
+emp_df['Tax'] = emp_df['Salary'] * 0.10
+print("Q6-k: Added Tax column\n", emp_df[['Name', 'Salary', 'Tax']], "\n")
+
+# l) Save to CSV
+emp_df.to_csv("modified_employees.csv", index=False)
+print("Q6-l: Data saved to 'modified_employees.csv'")
