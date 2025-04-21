@@ -1,0 +1,187 @@
+Q1. Ask the user to enter a value (e.g., M) for a mathematical function.
+ Generate x values from -10 to 10 using np.linspace().
+ Compute y values for:
+o y= M⋅x
+2
+o y=M⋅sin(x)
+ Plot both functions in a single figure:
+o Use different colors and line styles.
+o Add legend, grid, and title.
+CODE:
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Take user input for M
+M = float(input("Enter the value of M: "))
+
+# Generate x values
+x = np.linspace(-10, 10, 200)
+
+# Compute y values
+y1 = M * x ** 2
+y2 = M * np.sin(x)
+
+# Plotting
+plt.figure(figsize=(8, 6))
+
+# Plot y = M * x^2
+plt.plot(x, y1, label='y = M * x²', color='blue', linestyle='-')
+
+# Plot y = M * sin(x)
+plt.plot(x, y2, label='y = M * sin(x)', color='red', linestyle='--')
+
+# Add legend, grid, and title
+plt.legend()
+plt.title('Plot of y = M * x² and y = M * sin(x)')
+plt.xlabel('x')
+plt.ylabel('y')
+plt.grid(True)
+
+# Show plot
+plt.show()
+
+
+Q.2 Create a dataset of five subjects and scores.
+ Convert it into a Pandas DataFrame.
+ Plot the scores using a Seaborn bar plot with:
+o Different colors for each bar.
+o Annotations on top of each bar.
+o Title, axis labels, and grid.
+CODE:
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Step 1: Create the dataset
+data = {
+    'Subject': ['Math', 'Science', 'English', 'History', 'Computer'],
+    'Score': [85, 90, 78, 88, 95]
+}
+
+# Step 2: Convert to DataFrame
+df = pd.DataFrame(data)
+
+# Step 3: Plot using Seaborn
+plt.figure(figsize=(8, 6))
+colors = sns.color_palette("husl", len(df))  # Unique colors for each bar
+
+barplot = sns.barplot(x='Subject', y='Score', data=df, palette=colors)
+
+# Step 4: Add annotations on top of each bar
+for p in barplot.patches:
+    height = p.get_height()
+    barplot.annotate(f'{int(height)}',
+                     (p.get_x() + p.get_width() / 2., height),
+                     ha='center', va='bottom', fontsize=10, color='black')
+
+# Add title, axis labels, and grid
+plt.title('Scores by Subject', fontsize=14)
+plt.xlabel('Subjects', fontsize=12)
+plt.ylabel('Scores', fontsize=12)
+plt.grid(axis='y', linestyle='--', alpha=0.7)
+
+plt.tight_layout()
+plt.show()
+
+
+Q3. Write a Python script to select your roll number as seed for NumPy and
+then generate a dataset of 50 values using np.random.randn().
+ Create a 2x2 subplot layout displaying:
+o Line plot showing cumulative sum.
+o Scatter plot with random noise.
+ Customize with titles, axis labels, and grids.
+CODE:
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Step 1: Set your roll number as seed
+roll_number = int(input("Enter your roll number as seed: "))
+np.random.seed(roll_number)
+
+# Step 2: Generate 50 random values
+data = np.random.randn(50)
+
+# Step 3: Create subplots
+fig, axs = plt.subplots(2, 2, figsize=(10, 8))
+
+# Line plot - cumulative sum
+axs[0, 0].plot(np.cumsum(data), color='blue', linestyle='-', marker='o')
+axs[0, 0].set_title('Cumulative Sum')
+axs[0, 0].set_xlabel('Index')
+axs[0, 0].set_ylabel('Cumulative Value')
+axs[0, 0].grid(True)
+
+# Scatter plot - random noise
+axs[0, 1].scatter(range(50), data, color='green', marker='x')
+axs[0, 1].set_title('Random Noise Scatter')
+axs[0, 1].set_xlabel('Index')
+axs[0, 1].set_ylabel('Random Value')
+axs[0, 1].grid(True)
+
+# Turn off unused subplots
+axs[1, 0].axis('off')
+axs[1, 1].axis('off')
+
+plt.suptitle('Random Data Visualizations', fontsize=16)
+plt.tight_layout(rect=[0, 0.03, 1, 0.95])  # Adjust layout to fit suptitle
+plt.show()
+
+
+
+Q.4 Download Data-set from the below link
+https://github.com/AnjulaMehto/MCA/blob/main/company_sales_data.csv
+Apply ‘seaborn’ library to do the following.
+1. Read Total profit of all months and show it using a line plot.
+2. Read all product sales data and show it using a multiline plot.
+3. Plot bar chart for all the features/attributes.
+CODE:
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Step 1: Read the dataset
+data = pd.read_csv('company_sales_data.csv') #saved in pc desktop
+
+# Set seaborn style
+sns.set(style='whitegrid')
+
+# 1. Total profit of all months - Line plot
+plt.figure(figsize=(8, 5))
+sns.lineplot(x='month_number', y='total_profit', data=data, marker='o', color='green')
+plt.title('Total Profit Over Months')
+plt.xlabel('Month Number')
+plt.ylabel('Total Profit')
+plt.grid(True)
+plt.tight_layout()
+plt.show()
+
+# 2. All product sales - Multiline plot
+plt.figure(figsize=(10, 6))
+for column in data.columns[1:-1]:  # Skip month_number and total_profit
+    sns.lineplot(x='month_number', y=column, data=data, marker='o', label=column)
+
+plt.title('Product Sales Data')
+plt.xlabel('Month Number')
+plt.ylabel('Units Sold')
+plt.legend(title='Products')
+plt.grid(True)
+plt.tight_layout()
+plt.show()
+
+# 3. Bar chart for all features
+data_sum = data.sum(numeric_only=True)  # Sum up all the values column-wise
+
+plt.figure(figsize=(10, 6))
+sns.barplot(x=data_sum.index, y=data_sum.values, palette='viridis')
+
+# Annotate bars
+for index, value in enumerate(data_sum.values):
+    plt.text(index, value, str(int(value)), ha='center', va='bottom')
+
+plt.title('Total Sales/Profit by Product')
+plt.xlabel('Product / Attribute')
+plt.ylabel('Total Units / Profit')
+plt.xticks(rotation=45)
+plt.grid(axis='y', linestyle='--', alpha=0.7)
+plt.tight_layout()
+plt.show()
