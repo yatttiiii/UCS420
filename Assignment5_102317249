@@ -1,0 +1,200 @@
+Q.1 For the array gfg = np.matrix('[4, 1, 9; 12, 3, 1; 4, 5, 6]'), Find
+i. Sum of all elements
+ii. Sum of all elements row-wise
+iii. Sum of all elements column-wise
+CODE:
+import numpy as np
+
+gfg = np.matrix('[4, 1, 9; 12, 3, 1; 4, 5, 6]')
+
+# i. Sum of all elements
+total_sum = gfg.sum()
+
+# ii. Sum of all elements row-wise
+row_sum = gfg.sum(axis=1)
+
+# iii. Sum of all elements column-wise
+col_sum = gfg.sum(axis=0)
+
+print("Sum of all elements:", total_sum)
+print("Sum of elements row-wise:", row_sum)
+print("Sum of elements column-wise:", col_sum)
+OUTPUT:
+Sum of all elements: 45
+Sum of elements row-wise: [[14]
+ [16]
+ [15]]
+Sum of elements column-wise: [[20  9 16]]
+
+Q.2 (a)For the array: array = np.array([10, 52, 62, 16, 16, 54, 453]), find
+i. Sorted array
+ii. Indices of sorted array
+iii. 4 smallest elements
+iv. 5 largest elements
+(b) For the array: array = np.array([1.0, 1.2, 2.2, 2.0, 3.0, 2.0]), find
+i. Integer elements only
+ii. Float elements only
+CODE:
+import numpy as np
+
+# Part (a)
+array_a = np.array([10, 52, 62, 16, 16, 54, 453])
+
+# i. Sorted array
+sorted_array = np.sort(array_a)
+
+# ii. Indices of sorted array
+sorted_indices = np.argsort(array_a)
+
+# iii. 4 smallest elements
+smallest_4 = np.sort(array_a)[:4]
+
+# iv. 5 largest elements
+largest_5 = np.sort(array_a)[-5:]
+
+print("Part (a):")
+print("Sorted array:", sorted_array)
+print("Indices of sorted array:", sorted_indices)
+print("4 smallest elements:", smallest_4)
+print("5 largest elements:", largest_5)
+
+# Part (b)
+array_b = np.array([1.0, 1.2, 2.2, 2.0, 3.0, 2.0])
+
+# i. Integer elements only
+integer_elements = array_b[array_b == array_b.astype(int)]
+
+# ii. Float elements only
+float_elements = array_b[array_b != array_b.astype(int)]
+
+print("\nPart (b):")
+print("Integer elements only:", integer_elements)
+print("Float elements only:", float_elements)
+OUTPUT:
+Part (a):
+Sorted array: [ 10  16  16  52  54  62 453]
+Indices of sorted array: [0 3 4 1 5 2 6]
+4 smallest elements: [10 16 16 52]
+5 largest elements: [ 16  52  54  62 453]
+
+Part (b):
+Integer elements only: [1. 2. 3. 2.]
+Float elements only: [1.2 2.2]
+
+Q.3 You are given a weekly sales dataset and need to perform various operations
+using NumPy broadcasting.
+a) Generate your unique sales dataset:
+ Take the sum of the ASCII values of the initials of your first and last
+name. Call this value X. (If your initials are A B → ASCII sum = 65
++ 66 = 131 → sales = [131, 181, 231, 281, 331].)
+ Create a NumPy array sales with values [X, X+50, X+100, X+150,
+X+200].
+
+b) Compute your personalized tax rate as ((X % 5) + 5) / 100.
+ Use broadcasting to apply this tax rate to each sales value.
+c) Adjust sales based on discount:
+ If sales < X+100, apply a 5% discount.
+ If sales >= X+100, apply a 10% discount.
+CODE:
+import numpy as np
+
+# Step (a) - Generate sales dataset
+first_initial = 'A'
+last_initial = 'B'
+X = ord(first_initial) + ord(last_initial)  # ASCII sum
+
+sales = np.array([X, X + 50, X + 100, X + 150, X + 200])
+print("Initial Sales data:", sales)
+
+# Step (b) - Compute personalized tax rate
+tax_rate = ((X % 5) + 5) / 100
+sales_with_tax = sales + (sales * tax_rate)
+print("Sales after applying tax:", sales_with_tax)
+
+# Step (c) - Apply discount
+discounted_sales = np.where(sales < (X + 100),
+                            sales * 0.95,  # 5% discount
+                            sales * 0.90)  # 10% discount
+print("Sales after discount:", discounted_sales)
+
+# Step (d) - Expand sales data for multiple weeks
+weekly_sales = np.vstack([sales, sales, sales])
+print("Sales data for 3 weeks:\n", weekly_sales)
+
+# Increase sales by 2% per week
+weeks = np.arange(3).reshape(3, 1)  # [[0], [1], [2]]
+weekly_sales_increased = weekly_sales * (1 + weeks * 0.02)
+print("Sales after 2% weekly increase:\n", weekly_sales_increased)
+OUTPUT:
+Initial Sales data: [131 181 231 281 331]
+Sales after applying tax: [138.86 191.86 244.86 297.86 350.86]
+Sales after discount: [124.45 171.95 207.9  252.9  297.9 ]
+Sales data for 3 weeks:
+ [[131 181 231 281 331]
+ [131 181 231 281 331]
+ [131 181 231 281 331]]
+Sales after 2% weekly increase:
+ [[131.   181.   231.   281.   331.  ]
+ [133.62 184.62 235.62 286.62 337.62]
+ [136.24 188.24 240.24 292.24 344.24]]
+
+Q4. Generate x values using np.linspace() from -10 to 10 with 100 points. Use
+each function from the list below and compute y values using NumPy:
+ Y = x2
+ Y = sin(x)
+ Y = ex
+ Y = log(|x| + 1)
+Plot the chosen function using Matplotlib. Add title, labels, and grid for clarity.
+CODE:
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Generate x values
+x = np.linspace(-10, 10, 100)
+
+# Compute y values
+y_square = x ** 2
+y_sin = np.sin(x)
+y_exp = np.exp(x)
+y_log = np.log(np.abs(x) + 1)
+
+# Plotting
+plt.figure(figsize=(12, 8))
+
+# Plot x^2
+plt.subplot(2, 2, 1)
+plt.plot(x, y_square, color='blue')
+plt.title('Y = x²')
+plt.xlabel('x')
+plt.ylabel('y')
+plt.grid(True)
+
+# Plot sin(x)
+plt.subplot(2, 2, 2)
+plt.plot(x, y_sin, color='green')
+plt.title('Y = sin(x)')
+plt.xlabel('x')
+plt.ylabel('y')
+plt.grid(True)
+
+# Plot exp(x)
+plt.subplot(2, 2, 3)
+plt.plot(x, y_exp, color='red')
+plt.title('Y = exp(x)')
+plt.xlabel('x')
+plt.ylabel('y')
+plt.grid(True)
+
+# Plot log(|x| + 1)
+plt.subplot(2, 2, 4)
+plt.plot(x, y_log, color='purple')
+plt.title('Y = log(|x| + 1)')
+plt.xlabel('x')
+plt.ylabel('y')
+plt.grid(True)
+
+plt.tight_layout()
+plt.show()
+OUTPUT:
+Graphs
+
