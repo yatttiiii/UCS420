@@ -1,0 +1,418 @@
+Q1. You are a data analyst at an e-commerce company. Your task is to analyze sales data,
+clean and process it, perform staƟsƟcal analysis, and generate visual insights to help the
+business make informed decisions.
+1. Use your roll number as the random seed to generate unique data for each student.
+2. Follow the quesƟons step by step, as each part builds upon the previous one.
+3. Submit the assignment as a Jupyter Notebook (.ipynb) with:
+ Well-documented code and clear comments.
+ Markdown explanaƟons for each step.
+ Screenshots of the plots and outputs.
+Part I: Randomized Sales Data GeneraƟon (NumPy)
+1. IniƟalize Random Seed
+2. Generate Sales Data
+ Create a NumPy array of random sales data for 12 months (shape = (12, 4)),
+where each column represents a product category:
+ Electronics, Clothing, Home & Kitchen, Sports.
+ Sales values should be between 1000 and 5000 units per month.
+ The range should be randomized using the seed.
+3. Convert to DataFrame
+ Convert the cleaned NumPy array into a Pandas DataFrame with:
+i. Columns: Electronics, Clothing, Home & Kitchen, Sports
+ii. Index: Months from Jan to Dec
+Part II: Data ManipulaƟon and Analysis (Pandas)
+1. Display the first 5 rows and summary staƟsƟcs of the DataFrame.
+2. Calculate the total sales per category and total sales per month.
+3. Calculate the average sales growth between consecuƟve months for each category.
+4. Add the following columns to the DataFrame:
+ Total Sales: Sum of all categories per month.
+ Growth Rate: Percentage change in Total Sales from the previous month.
+5. Apply a randomized discount:
+ If your roll number is even, apply a 10% discount to the Electronics category.
+
+ If odd, apply a 15% discount to the Clothing category.
+
+Part III: VisualizaƟons (Matplotlib and Seaborn)
+1. Plot monthly sales trends for each category using line plots.
+2. Create the following plots:
+ Box plots to show the sales distribuƟon for each category.
+
+CODE:
+# 📊 E-commerce Sales Data Analysis - Complete Code
+
+# Import libraries
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Set your roll number as random seed
+roll_number = 23  # 🔄 Replace with your roll number
+np.random.seed(roll_number)
+
+# Part I: Randomized Sales Data Generation
+# -----------------------------------------
+
+# Generate random sales data between 1000 and 5000 (shape 12x4)
+sales_data = np.random.randint(1000, 5001, size=(12, 4))
+
+# Create DataFrame
+months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+          'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+categories = ['Electronics', 'Clothing', 'Home & Kitchen', 'Sports']
+
+df = pd.DataFrame(sales_data, columns=categories, index=months)
+
+# Part II: Data Manipulation and Analysis
+# -----------------------------------------
+
+# 1. Display first 5 rows and summary statistics
+print("First 5 rows of the data:\n", df.head())
+print("\nSummary Statistics:\n", df.describe())
+
+# 2. Total sales per category and per month
+total_category_sales = df.sum()
+print("\nTotal Sales per Category:\n", total_category_sales)
+
+total_monthly_sales = df.sum(axis=1)
+print("\nTotal Sales per Month:\n", total_monthly_sales)
+
+# 3. Average sales growth between consecutive months for each category
+avg_growth = df.pct_change().mean() * 100
+print("\nAverage Sales Growth (%):\n", avg_growth)
+
+# 4. Add 'Total Sales' and 'Growth Rate' columns
+df['Total Sales'] = df.sum(axis=1)
+df['Growth Rate (%)'] = df['Total Sales'].pct_change() * 100
+
+# 5. Apply randomized discount based on roll number
+if roll_number % 2 == 0:
+    df['Electronics'] = df['Electronics'] * 0.9  # 10% discount
+    print("\nApplied 10% discount to Electronics category.")
+else:
+    df['Clothing'] = df['Clothing'] * 0.85  # 15% discount
+    print("\nApplied 15% discount to Clothing category.")
+
+print("\nUpdated DataFrame after discount:\n", df)
+
+# Part III: Visualizations
+
+# 1. Monthly sales trends for each category
+plt.figure(figsize=(10, 6))
+for category in categories:
+    plt.plot(df.index, df[category], marker='o', label=category)
+
+plt.title('Monthly Sales Trends')
+plt.xlabel('Month')
+plt.ylabel('Sales Units')
+plt.legend()
+plt.grid(True)
+plt.tight_layout()
+plt.show()
+
+# 2. Box plots for sales distribution
+plt.figure(figsize=(8, 6))
+sns.boxplot(data=df[categories])
+plt.title('Sales Distribution by Category')
+plt.xlabel('Product Category')
+plt.ylabel('Sales Units')
+plt.grid(True)
+plt.tight_layout()
+plt.show()
+
+OUTPUT:
+First 5 rows of the data:
+      Electronics  Clothing  Home & Kitchen  Sports
+Jan         1595      1742            2064    2993
+Feb         3998      2512            3079    3285
+Mar         4532      1347            1039    4674
+Apr         1665      4078            2915    4501
+May         2548      1049            4778    3507
+
+Summary Statistics:
+        Electronics     Clothing  Home & Kitchen       Sports
+count    12.000000    12.000000       12.000000    12.000000
+mean   3024.000000  2786.333333     3056.166667  3042.666667
+std    1281.091651  1401.709108     1196.443353   964.617242
+min    1214.000000  1049.000000     1039.000000  1533.000000
+25%    1689.750000  1657.250000     2346.750000  2716.000000
+50%    3091.500000  2364.000000     2997.000000  3053.500000
+75%    4030.750000  4150.750000     3819.250000  3340.500000
+max    4781.000000  4983.000000     4795.000000  4674.000000
+
+Total Sales per Category:
+ Electronics       36288
+Clothing          33436
+Home & Kitchen    36674
+Sports            36512
+dtype: int64
+
+Total Sales per Month:
+ Jan     8394
+Feb    12874
+Mar    11592
+Apr    13159
+May    11882
+Jun    12614
+Jul    12450
+Aug    11208
+Sep    13755
+Oct    13647
+Nov    11180
+Dec    10155
+dtype: int64
+
+Average Sales Growth (%):
+ Electronics       20.243773
+Clothing          52.231352
+Home & Kitchen    16.534958
+Sports             7.766751
+dtype: float64
+
+Applied 15% discount to Clothing category.
+
+Updated DataFrame after discount:
+      Electronics  Clothing  Home & Kitchen  Sports  Total Sales  \
+Jan         1595   1480.70            2064    2993         8394   
+Feb         3998   2135.20            3079    3285        12874   
+Mar         4532   1144.95            1039    4674        11592   
+Apr         1665   3466.30            2915    4501        13159   
+May         2548    891.65            4778    3507        11882   
+Jun         4781   1883.60            4084    1533        12614   
+Jul         2584   3713.65            2615    2882        12450   
+Aug         4129   1192.55            2441    3235        11208   
+Sep         3599   4235.55            3596    1577        13755   
+Oct         3945   2471.80            3731    3063        13647   
+Nov         1214   1807.95            4795    3044        11180   
+Dec         1698   3996.70            1537    2218        10155   
+
+     Growth Rate (%)  
+Jan              NaN  
+Feb        53.371456  
+Mar        -9.958055  
+Apr        13.517943  
+May        -9.704385  
+Jun         6.160579  
+Jul        -1.300143  
+Aug        -9.975904  
+Sep        22.724839  
+Oct        -0.785169  
+Nov       -18.077233  
+Dec        -9.168157  
+
+
+
+
+Q.2 For the array: array = np.array([[1, -2, 3],[-4, 5, -6]])
+i. Find element-wise absolute value
+ii. Find the 25th, 50th, and 75th percenƟle of flaƩened array, for each column, for each
+row.
+iii. Mean, Median and Standard DeviaƟon of flaƩened array, of each column, and
+each row
+
+CODE:
+import numpy as np
+
+# Given array
+array = np.array([[1, -2, 3],
+                  [-4, 5, -6]])
+
+print("Original Array:\n", array)
+
+# i. Element-wise absolute value
+abs_array = np.abs(array)
+print("\nElement-wise Absolute Value:\n", abs_array)
+
+# ii. Percentiles (flattened, per column, per row)
+
+# Flattened percentiles
+flat = array.flatten()
+p25_flat = np.percentile(flat, 25)
+p50_flat = np.percentile(flat, 50)
+p75_flat = np.percentile(flat, 75)
+print("\nPercentiles (Flattened Array):")
+print(f"25th: {p25_flat}, 50th: {p50_flat}, 75th: {p75_flat}")
+
+# Column-wise percentiles
+p25_col = np.percentile(array, 25, axis=0)
+p50_col = np.percentile(array, 50, axis=0)
+p75_col = np.percentile(array, 75, axis=0)
+print("\nPercentiles (Column-wise):")
+print(f"25th: {p25_col}")
+print(f"50th: {p50_col}")
+print(f"75th: {p75_col}")
+
+# Row-wise percentiles
+p25_row = np.percentile(array, 25, axis=1)
+p50_row = np.percentile(array, 50, axis=1)
+p75_row = np.percentile(array, 75, axis=1)
+print("\nPercentiles (Row-wise):")
+print(f"25th: {p25_row}")
+print(f"50th: {p50_row}")
+print(f"75th: {p75_row}")
+
+# iii. Mean, Median, Std Dev
+
+# Flattened
+mean_flat = np.mean(flat)
+median_flat = np.median(flat)
+std_flat = np.std(flat)
+print("\nFlattened Array Stats:")
+print(f"Mean: {mean_flat}, Median: {median_flat}, Std Dev: {std_flat}")
+
+# Column-wise
+mean_col = np.mean(array, axis=0)
+median_col = np.median(array, axis=0)
+std_col = np.std(array, axis=0)
+print("\nColumn-wise Stats:")
+print(f"Mean: {mean_col}")
+print(f"Median: {median_col}")
+print(f"Std Dev: {std_col}")
+
+# Row-wise
+mean_row = np.mean(array, axis=1)
+median_row = np.median(array, axis=1)
+std_row = np.std(array, axis=1)
+print("\nRow-wise Stats:")
+print(f"Mean: {mean_row}")
+print(f"Median: {median_row}")
+print(f"Std Dev: {std_row}")
+
+OUTPUT:
+Original Array:
+ [[ 1 -2  3]
+ [-4  5 -6]]
+
+Element-wise Absolute Value:
+ [[1 2 3]
+ [4 5 6]]
+
+Percentiles (Flattened Array):
+25th: -3.5, 50th: -0.5, 75th: 2.5
+
+Percentiles (Column-wise):
+25th: [-2.75 -0.25 -3.75]
+50th: [-1.5  1.5 -1.5]
+75th: [-0.25  3.25  0.75]
+
+Percentiles (Row-wise):
+25th: [-0.5 -5. ]
+50th: [ 1. -4.]
+75th: [2.  0.5]
+
+Flattened Array Stats:
+Mean: -0.5, Median: -0.5, Std Dev: 3.8622100754188224
+
+Column-wise Stats:
+Mean: [-1.5  1.5 -1.5]
+Median: [-1.5  1.5 -1.5]
+Std Dev: [2.5 3.5 4.5]
+
+Row-wise Stats:
+Mean: [ 0.66666667 -1.66666667]
+Median: [ 1. -4.]
+Std Dev: [2.05480467 4.78423336]
+
+
+
+
+Q.3 For the array: a = np.array([-1.8, -1.6, -0.5, 0.5,1.6, 1.8, 3.0]).
+i. Find floor, ceiling and truncated value, rounded values
+
+CODE:
+import numpy as np
+
+# Given array
+a = np.array([-1.8, -1.6, -0.5, 0.5, 1.6, 1.8, 3.0])
+print("Original Array:\n", a)
+
+# i. Floor values
+floor_values = np.floor(a)
+print("\nFloor Values:\n", floor_values)
+
+# ii. Ceiling values
+ceil_values = np.ceil(a)
+print("\nCeiling Values:\n", ceil_values)
+
+# iii. Truncated values
+trunc_values = np.trunc(a)
+print("\nTruncated Values:\n", trunc_values)
+
+# iv. Rounded values
+rounded_values = np.round(a)
+print("\nRounded Values:\n", rounded_values)
+
+OUTPUT:
+Original Array:
+ [-1.8 -1.6 -0.5  0.5  1.6  1.8  3. ]
+
+Floor Values:
+ [-2. -2. -1.  0.  1.  1.  3.]
+
+Ceiling Values:
+ [-1. -1. -0.  1.  2.  2.  3.]
+
+Truncated Values:
+ [-1. -1. -0.  0.  1.  1.  3.]
+
+Rounded Values:
+ [-2. -2. -0.  0.  2.  2.  3.]
+
+
+
+
+Q.4 WAP to swap two elements in a list in Python Using a Temporary Variable.
+
+CODE:
+# Define the list
+my_list = [10, 20, 30, 40, 50]
+
+# Positions to swap
+pos1 = 1  # second element (indexing starts from 0)
+pos2 = 3  # fourth element
+
+print("Original list:", my_list)
+
+# Swapping using a temporary variable
+temp = my_list[pos1]
+my_list[pos1] = my_list[pos2]
+my_list[pos2] = temp
+
+print("List after swapping elements at positions", pos1, "and", pos2, ":", my_list)
+
+OUTPUT:
+Original list: [10, 20, 30, 40, 50]
+List after swapping elements at positions 1 and 3 : [10, 40, 30, 20, 50]
+
+
+
+
+Q.5 Write a Python program to swap two elements in a set by converƟng it to a list first.
+
+CODE:
+# Define the set
+my_set = {10, 20, 30, 40, 50}
+
+# Convert set to list (since sets are unordered, order may vary)
+my_list = list(my_set)
+
+print("Original list from set:", my_list)
+
+# Define positions to swap
+pos1 = 1
+pos2 = 3
+
+# Swap elements using a temporary variable
+temp = my_list[pos1]
+my_list[pos1] = my_list[pos2]
+my_list[pos2] = temp
+
+print("List after swapping:", my_list)
+
+# Convert list back to set
+my_set = set(my_list)
+print("Final set after swapping:", my_set)
+
+OUTPUT:
+Original list from set: [50, 20, 40, 10, 30]
+List after swapping: [50, 10, 40, 20, 30]
+Final set after swapping: {40, 10, 50, 20, 30}
